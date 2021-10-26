@@ -122,26 +122,16 @@ void main() async {
       pages: list,
       jscode: '''
     // 删除顶部
-    // 拿到待删除节点:
     var self = document.querySelector('body > div.wy-grid-for-nav > section > div > div > div:nth-child(1)');
-    // 拿到父节点:
-    var parent = self.parentElement;
-    // 删除:
-    parent.removeChild(self);
+    self?.parentElement?.removeChild(self);
 
     // 删除底部
     var self_foot = document.querySelector('body > div.wy-grid-for-nav > section > div > div > footer');
-    // 拿到父节点:
-    var _parent = self_foot.parentElement;
-    // 删除:
-    _parent.removeChild(self_foot);
+    self_foot?.parentElement?.removeChild(self_foot);
 
     // 删除导航
     var selfnav = document.querySelector('body > div.wy-grid-for-nav > section > nav');
-    // 拿到父节点:
-    var _parentnav = selfnav.parentElement;
-    // 删除:
-    _parentnav.removeChild(selfnav);
+    selfnav?.parentElement?.removeChild(selfnav);
   ''',
       output: 'output.pdf');
 }
