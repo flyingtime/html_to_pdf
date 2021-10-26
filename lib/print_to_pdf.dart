@@ -13,12 +13,10 @@ void makeAllPagesToPdf(
   var browser = await puppeteer.launch();
 
   var pdfnames = <String>[];
-  int index = 0;
   for (int i = 0; i < pages.length; i++) {
-    if (index == pages.length - 1) break;
-    final name = sprintf('%05d.pdf', [index++]);
+    final name = sprintf('%05d.pdf', [i]);
     pdfnames.add(name);
-    await makePdf(browser, '$url/${pages[index]}', name, jscode);
+    await makePdf(browser, '$url/${pages[i]}', name, jscode);
   }
 
   var args = [
