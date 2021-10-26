@@ -16,7 +16,7 @@ void makeAllPagesToPdf(
   int index = 0;
   for (int i = 0; i < pages.length; i++) {
     if (index == pages.length - 1) break;
-    final name = sprintf('%03d.pdf', [index++]);
+    final name = sprintf('%05d.pdf', [index++]);
     pdfnames.add(name);
     await makePdf(browser, '$url/${pages[index]}', name, jscode);
   }
