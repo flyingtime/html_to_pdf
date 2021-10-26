@@ -1,10 +1,6 @@
-import 'dart:io';
-import 'package:puppeteer/puppeteer.dart';
-import 'package:sprintf/sprintf.dart';
+import 'package:cli/print_to_pdf.dart';
 
 void main() async {
-  // Start the browser and go to a web page
-  var browser = await puppeteer.launch();
   final list = <String>[
     "who_we_are.html",
     "whatis.html",
@@ -121,44 +117,10 @@ void main() async {
     "status.html"
   ];
 
-  var pdfnames = <String>[];
-  int index = 0;
-  for (int i = 0; i < list.length; i++) {
-    if (index == list.length - 1) break;
-    final name = sprintf('%03d.pdf', [index++]);
-    pdfnames.add(name);
-    // await makePdf(
-    //     browser,
-    //     'https://hyperledger-fabric.readthedocs.io/zh_CN/release-2.2/${list[index]}',
-    //     name);
-  }
-
-  var args = [
-    'merge',
-    '-m',
-    'create',
-    '-s',
-    'output.pdf',
-  ];
-
-  args.addAll(pdfnames);
-
-  var result = await Process.run('pdfcpu', args);
-  stdout.write(result.stdout);
-  stderr.write(result.stderr);
-
-  await browser.close();
-}
-
-Future<void> makePdf(Browser browser, String url, String name) async {
-  var page = await browser.newPage();
-  await page.goto(url, wait: Until.networkIdle);
-
-  // For this example, we force the "screen" media-type because sometime
-  // CSS rules with "@media print" can change the look of the page.
-  await page.emulateMediaType(MediaType.screen);
-
-  await page.evaluate('''
+  makeAllPagesToPdf(
+      url: 'https://hyperledger-fabric.readthedocs.io/zh_CN/release-2.2',
+      pages: list,
+      jscode: '''
     // 删除顶部
     // 拿到待删除节点:
     var self = document.querySelector('body > div.wy-grid-for-nav > section > div > div > div:nth-child(1)');
@@ -180,12 +142,6 @@ Future<void> makePdf(Browser browser, String url, String name) async {
     var _parentnav = selfnav.parentElement;
     // 删除:
     _parentnav.removeChild(selfnav);
-  ''');
-
-  // Capture the PDF and save it to a file.
-  await page.pdf(
-      format: PaperFormat.a4,
-      printBackground: true,
-      // pageRanges: '1',
-      output: File(name).openWrite());
+  ''',
+      output: 'output.pdf');
 }
